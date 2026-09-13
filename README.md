@@ -96,9 +96,13 @@ comparison would be void.
 
 Severity is drawn independently: mild 50 %, moderate 35 %, severe 15 %.
 
-`demand_surge` is retained deliberately: it damages nothing, so a well-behaved recovery agent
-should decline to spend there. It is the control that shows the agent is selective rather
-than merely active.
+The shares above are the configured probabilities, not the counts in any one sample. With 150
+draws this run produced 58 `link_failure`, 32 `combined_disruption`, 25 `demand_surge`, 18
+`area_closure` and 17 `node_removal`, and 72 / 53 / 25 mild / moderate / severe.
+
+`demand_surge` is retained as the contrast case: it raises demand without breaking anything,
+so coverage is never lost and the coverage floor stays at zero. It separates what the design
+withstands *structurally* from what it absorbs through spare capacity.
 
 Two time points are recorded per run:
 
@@ -176,10 +180,20 @@ stage is given.
 | v6 | S1_service | 17.768 | 1.7763 | 1.5255 | 28.04 % | 36 557 | 99.9 % | 15 |
 | v6 | S2_energy | 17.794 | 1.7679 | 1.5290 | 30.25 % | 36 490 | 99.7 % | 15 |
 
-`DUN = 0` in all four. The structural action set (**v7**) buys more redundancy per euro and
-reaches the lowest exposure of any solution; the local action set (**v6**) holds travel time
-essentially at the baseline. The two are kept side by side because the choice between them is
-a genuine trade: **v7** pays roughly one minute of ATT for 7–9 points of exposure.
+`DUN = 0` in all four. The structural action set (**v7**) buys more redundancy per euro in
+both scenarios — higher `CEF` and `CEF₂` at a lower cost — and pays for it in travel time,
+about 1.1 min. The local action set (**v6**) holds travel time essentially at the baseline.
+
+Where the two disagree is *where* that redundancy lands. In S2, v7's extra redundancy reaches
+the pairs that had none: exposure falls 9.5 points to 20.76 %, the lowest of any solution. In
+S1 it does not — v7 has the higher `CEF₂` (1.5981 against 1.5255) and yet the **worse**
+exposure (31.84 % against 28.04 %). Average redundancy is up while more demand is left on a
+single path, because the structural actions concentrate alternatives on pairs that already
+had some.
+
+That is why both are reported. `CEF₂` measures how much redundancy exists; `exposure`
+measures how evenly it is spread. A design can improve the first and worsen the second, and
+only the pair of them says whether the network is actually less fragile.
 
 ### Stage 2 — Disruption (150 runs, common random numbers)
 
@@ -230,8 +244,26 @@ By disruption type (n / acted / recovered):
 | `area_closure` | 18 / 12 / 48.1 % | 18 / 14 / 76.0 % |
 | `demand_surge` | — | — |
 
-`demand_surge` never appears: it destroys no infrastructure, so it never creates recoverable
-demand, so the agent never spends there. The negative control behaves as intended.
+`demand_surge` does not appear in the table above: it destroys no infrastructure, so unserved
+demand stays at zero and there is nothing to *recover*.
+
+The agent is not idle there, though. In all 25 `demand_surge` episodes of each scenario it
+applies the same single action, `corridor_relief`, and reaches the same final cost —
+38 346 € in S1, 36 596 € in S2, both within `B_total`. Coverage stays at zero throughout;
+what improves is travel time, by 0.51 min in S1 and 0.54 min in S2, at an average
+2 144 € and 1 351 € per episode.
+
+Two things follow, and both are worth stating plainly. First, the response is **identical
+regardless of how large the surge is** — so the agent is not calibrating to the event; it is
+taking the best structural improvement its budget allows. Second, that improvement was
+available all along and the *design* could not afford it, because the design is capped at
+`B_design` while recovery may spend up to `B_total`. The 5 % reserve is therefore not held
+back for emergencies: it is spent on the first episode that offers any gain at all.
+
+Whether that is the desired policy is a design decision, not a defect. Spending it buys real
+service on a congested day; withholding it keeps capacity for the next structural failure.
+Setting `GREEDY_MIN_GAIN` above zero, or gating recovery on `coverage_gap_before > 0`, would
+restrict the agent to episodes where coverage was actually lost.
 
 ---
 

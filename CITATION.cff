@@ -1,0 +1,33 @@
+cff-version: 1.2.0
+message: "If you use this software or its results, please cite the thesis below."
+title: "Multi-Objective Resilient Urban Network Design & Disruption Management under Budget Constraints: A Reinforcement Learning Framework for the Case of Rivera, Uruguay"
+authors:
+  - family-names: "Spyropoulos"
+    given-names: "Dimitrios"
+    affiliation: "Department of Civil Engineering, University of Patras"
+type: software
+license: MIT
+year: 2026
+abstract: >-
+  A three-stage reinforcement-learning framework for resilient urban transit network
+  design. A tabular Q-learning agent restructures an existing network under hard
+  coverage and budget constraints while deliberately leaving part of the budget
+  unspent; 150 common-random-number Monte Carlo disruptions are then applied
+  identically to every network; and a recovery agent spends the reserve to restore
+  service without exceeding the approved budget. Case study: Rivera, Uruguay.
+keywords:
+  - transit network design
+  - reinforcement learning
+  - network resilience
+  - disruption management
+  - multi-objective optimisation
+references:
+  - type: thesis
+    title: "Multi-Objective Resilient Urban Network Design & Disruption Management under Budget Constraints: A Reinforcement Learning Framework for the Case of Rivera, Uruguay"
+    thesis-type: "Diploma thesis"
+    authors:
+      - family-names: "Spyropoulos"
+        given-names: "Dimitrios"
+    institution:
+      name: "University of Patras, Department of Civil Engineering"
+    year: 2026

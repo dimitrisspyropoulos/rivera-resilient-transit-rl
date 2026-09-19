@@ -1,4 +1,4 @@
-# Resilient transit network design and disruption recovery under one budget
+# Multi-Objective Resilient Urban Network Design & Disruption Management under Budget Constraints: A Reinforcement Learning Framework for the Case of Rivera, Uruguay.
 
 **Rivera, Uruguay — a reinforcement-learning framework**
 
